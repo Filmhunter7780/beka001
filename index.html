@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Электрик — Бексултан | Бишкек</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --yellow: #FFD600;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --gray: #1C1C1C;
+    --light-gray: #2A2A2A;
+    --text: #E8E8E8;
+    --muted: #888;
+    --nav-h: 64px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5vw;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,214,0,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--yellow);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  /* Desktop links */
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 4px 0;
+    position: relative;
+  }
+  .nav-links a::after {
+    content:'';
+    position:absolute;
+    bottom:-2px; left:0;
+    width:0; height:1px;
+    background: var(--yellow);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Burger */
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    background: none;
+    border: none;
+  }
+  .burger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--yellow);
+    transition: all 0.3s;
+  }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--nav-h);
+    left: 0; right: 0;
+    background: rgba(10,10,10,0.98);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,214,0,0.1);
+    z-index: 99;
+    padding: 24px 5vw 32px;
+    flex-direction: column;
+    gap: 0;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--yellow); }
+
+  /* ─── HERO ─── */
+  header {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: calc(var(--nav-h) + 40px) 5vw 60px;
+    overflow: hidden;
+  }
+
+  .header-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 80% 50%, rgba(255,214,0,0.07) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,214,0,0.035) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,214,0,0.035) 60px);
+    z-index: 0;
+  }
+
+  .bolt-bg {
+    position: absolute;
+    right: -2vw;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(160px, 32vw, 460px);
+    line-height: 1;
+    color: rgba(255,214,0,0.04);
+    font-family: 'Bebas Neue', sans-serif;
+    user-select: none;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .header-content { position: relative; z-index: 1; max-width: 700px; }
+
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(10px, 1.4vw, 13px);
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    animation: fadeDown 0.5s ease both;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,214,0,0.1);
+    border: 1px solid rgba(255,214,0,0.28);
+    color: var(--yellow);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(9px, 1.2vw, 11px);
+    letter-spacing: 0.14em;
+    padding: 6px 14px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeDown 0.5s 0.05s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.65); }
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(58px, 11vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 0.01em;
+    color: #fff;
+    animation: fadeDown 0.5s 0.1s ease both;
+  }
+  h1 span { color: var(--yellow); }
+
+  .tagline {
+    margin-top: 22px;
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 440px;
+    line-height: 1.65;
+    animation: fadeDown 0.5s 0.18s ease both;
+  }
+
+  .cta-row {
+    margin-top: 40px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    animation: fadeDown 0.5s 0.25s ease both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 26px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(11px, 1.3vw, 13px);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--yellow); color: var(--black); font-weight: 600; }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--yellow);
+    border: 1px solid rgba(255,214,0,0.35);
+  }
+  .btn-outline:hover { border-color: var(--yellow); background: rgba(255,214,0,0.06); transform: translateY(-2px); }
+
+  .stats-row {
+    margin-top: 56px;
+    display: flex;
+    gap: clamp(20px, 4vw, 48px);
+    flex-wrap: wrap;
+    animation: fadeDown 0.5s 0.32s ease both;
+  }
+
+  .stat { border-left: 2px solid var(--yellow); padding-left: 16px; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 44px);
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* ─── СЕКЦИИ ─── */
+  section { padding: clamp(60px, 10vw, 110px) 5vw; }
+
+  .section-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 70px);
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 44px;
+  }
+
+  /* ─── УСЛУГИ ─── */
+  #services { background: var(--dark); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 2px;
+  }
+
+  .service-card {
+    background: var(--gray);
+    padding: 30px 26px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px; width: 0;
+    background: var(--yellow);
+    transition: width 0.3s ease;
+  }
+  .service-card:hover { background: var(--light-gray); }
+  .service-card:hover::after { width: 100%; }
+
+  .service-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+  .service-name { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  .service-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ─── О МНЕ ─── */
+  #why { background: var(--black); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 2px;
+    max-width: 860px;
+  }
+
+  .why-item {
+    background: var(--gray);
+    padding: 26px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .why-item:hover { background: var(--light-gray); }
+
+  .why-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    color: rgba(255,214,0,0.2);
+    line-height: 1;
+    min-width: 32px;
+    transition: color 0.2s;
+  }
+  .why-item:hover .why-num { color: var(--yellow); }
+
+  .why-text-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+  .why-text-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+  /* ─── КОНТАКТЫ ─── */
+  #contacts { background: var(--yellow); padding: clamp(60px, 10vw, 110px) 5vw; }
+  #contacts h2 { color: var(--black); }
+  #contacts .section-tag { color: rgba(0,0,0,0.45); }
+
+  .contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 2px;
+  }
+
+  .contact-card {
+    background: rgba(0,0,0,0.08);
+    padding: 26px 22px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+    color: var(--black);
+  }
+  .contact-card:hover { background: rgba(0,0,0,0.16); }
+
+  .contact-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+  .contact-value { font-size: 15px; font-weight: 600; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--gray);
+    padding: 26px 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--yellow);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ─── АНИМАЦИИ ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── АДАПТИВ ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    .bolt-bg { display: none; }
+    .cta-row { flex-direction: column; }
+    .btn { justify-content: center; text-align: center; }
+    .stats-row { gap: 20px; }
+  }
+
+  @media (min-width: 769px) {
+    .burger { display: none; }
+    .mobile-menu { display: none !important; }
+  }
+
+  /* Scroll offset для nav */
+  #services, #why, #contacts {
+    scroll-margin-top: var(--nav-h);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">⚡ Бексултан</a>
+  <ul class="nav-links">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#why">О мне</a></li>
+    <li><a href="#contacts">Контакты</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- МОБИЛЬНОЕ МЕНЮ -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMenu()">Услуги</a>
+  <a href="#why" onclick="closeMenu()">О мне</a>
+  <a href="#contacts" onclick="closeMenu()">Контакты</a>
+</div>
+
+<!-- HERO -->
+<header>
+  <div class="header-bg"></div>
+  <div class="bolt-bg">⚡</div>
+  <div class="header-content">
+    <div class="hero-label">Электромонтажные работы</div>
+    <div class="badge">Профессиональный электрик · Бишкек</div>
+    <h1>Бек<span>султан</span></h1>
+    <p class="tagline">Электромонтажные работы любой сложности. Быстро, безопасно, с гарантией.</p>
+    <div class="cta-row">
+      <a href="tel:+996700372290" class="btn btn-primary">📞 Позвонить</a>
+      <a href="https://wa.me/996700372290" class="btn btn-outline">WhatsApp</a>
+    </div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Лет опыта</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Объектов</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Аварийный вызов</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- УСЛУГИ -->
+<section id="services">
+  <p class="section-tag reveal">// Чем занимаюсь</p>
+  <h2 class="reveal">Услуги</h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-icon">🔌</span>
+      <div class="service-name">Монтаж проводки</div>
+      <div class="service-desc">Прокладка кабелей, розетки, выключатели — под ключ в квартирах и домах.</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">⚡</span>
+      <div class="service-name">Электрощиты</div>
+      <div class="service-desc">Сборка, замена и модернизация распределительных щитков, автоматов, УЗО.</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">💡</span>
+      <div class="service-name">Освещение</div>
+      <div class="service-desc">Монтаж люстр, точечных светильников, LED-лент, умного освещения.</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🏠</span>
+      <div class="service-name">Частные дома</div>
+      <div class="service-desc">Ввод электричества, заземление, молниезащита для частных домов.</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🔧</span>
+      <div class="service-name">Ремонт и диагностика</div>
+      <div class="service-desc">Поиск и устранение неисправностей, восстановление линий, замена оборудования.</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🚨</span>
+      <div class="service-name">Аварийный выезд</div>
+      <div class="service-desc">Срочный выезд круглосуточно при коротких замыканиях и аварийных ситуациях.</div>
+    </div>
+  </div>
+</section>
+
+<!-- О МНЕ -->
+<section id="why">
+  <p class="section-tag reveal">// Преимущества</p>
+  <h2 class="reveal">Почему выбирают меня</h2>
+  <div class="why-grid">
+    <div class="why-item reveal">
+      <div class="why-num">01</div>
+      <div>
+        <div class="why-text-title">Опыт 10+ лет</div>
+        <div class="why-text-desc">Работал на жилых, коммерческих и промышленных объектах Бишкека.</div>
+      </div>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-num">02</div>
+      <div>
+        <div class="why-text-title">Гарантия на работы</div>
+        <div class="why-text-desc">Даю гарантию на все выполненные монтажные работы.</div>
+      </div>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-num">03</div>
+      <div>
+        <div class="why-text-title">Честные цены</div>
+        <div class="why-text-desc">Смета до начала работ, без скрытых доплат и навязанных услуг.</div>
+      </div>
+    </div>
+    <div class="why-item reveal">
+      <div class="why-num">04</div>
+      <div>
+        <div class="why-text-title">Работаю аккуратно</div>
+        <div class="why-text-desc">Убираю за собой, не порчу отделку. Уважаю чужое имущество.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section id="contacts">
+  <p class="section-tag reveal">// Связаться</p>
+  <h2 class="reveal" style="color:var(--black)">Контакты</h2>
+  <div class="contacts-grid">
+    <a href="tel:+996700372290" class="contact-card reveal">
+      <div class="contact-type">Телефон</div>
+      <div class="contact-value">+996 700 372 290</div>
+    </a>
+    <a href="https://wa.me/996700372290" class="contact-card reveal">
+      <div class="contact-type">WhatsApp</div>
+      <div class="contact-value">+996 700 372 290</div>
+    </a>
+    <a href="https://t.me/+996700372290" class="contact-card reveal">
+      <div class="contact-type">Telegram</div>
+      <div class="contact-value">+996 700 372 290</div>
+    </a>
+    <div class="contact-card reveal" style="cursor:default">
+      <div class="contact-type">Город</div>
+      <div class="contact-value">Бишкек, Кыргызстан</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">⚡ Бексултан</div>
+  <div class="footer-copy">© 2026 · Электромонтажные работы · Бишкек</div>
+</footer>
+
+<script>
+  // Burger menu
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMenu() {
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // Закрыть меню при клике вне
+  document.addEventListener('click', (e) => {
+    if (!burger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 55);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
